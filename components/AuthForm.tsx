@@ -37,14 +37,7 @@ const AuthForm = ({ type }: { type: string }) => {
     defaultValues: {
       email: "",
       password: "",
-      firstName: "",
-      lastName: "",
-      address1: "",
-      city: "",
-      state: "",
-      postalCode: "",
-      dob: "",
-      ssn: "",
+      
     },
   });
 

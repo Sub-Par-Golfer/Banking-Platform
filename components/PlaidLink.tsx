@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Button } from './ui/button'
-import { StyledString } from 'next/dist/build/swc'
-import { PlaidLinkOnSuccess, usePlaidLink } from 'react-plaid-link'
+import { PlaidLinkOnSuccess, PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
 import { createLinkToken } from '@/lib/actions/user.actions'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 
 const PlaidLink = ({ user, variant }: PlaidLinkProps) => {

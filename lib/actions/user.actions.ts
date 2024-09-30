@@ -4,6 +4,7 @@ import { ID } from "node-appwrite";
 import {
   createAdminClient,
   createSessionClient,
+  createEmailPasswordSession
 } from "../appwrite";
 import { cookies } from "next/headers";
 import { encryptId, extractCustomerIdFromUrl, parseStringify } from "../utils";
@@ -69,7 +70,10 @@ export const signUp = async (userData: SignUpParams) => {
       }
     )
 
-    const session = await account.createEmailPasswordSession(email, password);
+    const session = await account.createEmailPasswordSession(
+      userData.email,
+      password
+    );
 
     cookies().set("appwrite-session", session.secret, {
       path: "/",
