@@ -75,14 +75,14 @@ export const signIn = async ({ email, password }: signInProps) => {
 
 export const signUp = async ({ password, ...userData }: SignUpParams) => {
   const { email, firstName, lastName } = userData;
-  
   try {
     const { account, database } = await createAdminClient();
 
+    // Create the user in Appwrite
     const newUserAccount = await account.create(
-      ID.unique(), 
-      email, 
-      password, 
+      ID.unique(),
+      email,
+      password,
       `${firstName} ${lastName}`
     );
 
@@ -90,6 +90,14 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       throw new Error('Error creating user');
     }
 
+    // Create a session for the newly created user
+    const session = await account.createEmailPasswordSession(email, password);
+
+    if (!session) {
+      throw new Error('Error creating session');
+    }
+
+    // Create a Dwolla customer and save it in the Appwrite database
     const dwollaCustomerUrl = await createDwollaCustomer({
       ...userData,
       type: 'personal',
@@ -113,19 +121,19 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       }
     );
 
+    // Set session cookie with the session secret
     cookies().set("appwrite-session", session.secret, {
       path: "/",
       httpOnly: true,
       sameSite: "strict",
-      secure: true, // Secure only in production
+      secure: true, // Secure should only be true in production
     });
 
-    // Return the newly created user data
     return parseStringify(newUser);
 
   } catch (error) {
     console.error('Error during sign-up:', error);
-    return null;  // Optionally return null or handle the error gracefully
+    return null;
   }
 };
 
